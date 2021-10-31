@@ -18,6 +18,7 @@ export async function getGroceryListWithItems(groceryListId) {
 }
 
 export async function addItem(groceryListId, item) {
+  item.name = item.name.trim();
   const rawResponse = await fetch(process.env.REACT_APP_API_URL + '/grocerylist/'+groceryListId, {
     method: 'POST',
     headers: {
@@ -36,7 +37,7 @@ export async function addItem(groceryListId, item) {
 }
 
 export async function deleteItem(groceryListId, name) {
-  const rawResponse = await fetch(process.env.REACT_APP_API_URL + '/grocerylist/'+groceryListId+'/'+name, {
+  const rawResponse = await fetch(process.env.REACT_APP_API_URL + '/grocerylist/'+groceryListId+'/'+name.trim(), {
     method: 'DELETE',
     headers: {
       'Accept': 'application/json',

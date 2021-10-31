@@ -12,6 +12,11 @@ const Header = () => {
       console.log('error signing out: ', error);
     }
   }
+
+  const removeLastVisited = () => {
+    localStorage.removeItem("dftl.lastVisited");
+  };
+
   return (
     <header>
       <Box sx={{ flexGrow: 1 }}>
@@ -21,7 +26,13 @@ const Header = () => {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               {"Don't Forget The Lime!"}
             </Typography>
-            <Button color="inherit" component={Link} to={'/'}>My Lists</Button>
+            <Button color="inherit" 
+              component={Link}
+              onClick={() => removeLastVisited()}
+              to={"/grocerylists"}
+              >
+                My Lists
+            </Button>
             <Button color="inherit" onClick={() => handleSignOut()}>Sign out</Button>
           </Toolbar>
         </AppBar>

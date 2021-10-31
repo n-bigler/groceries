@@ -6,6 +6,7 @@ import { Button, Card, CardContent, CardActions, CircularProgress, Grid, Typogra
 import {Link} from 'react-router-dom';
 import AddGroceryListDialog from './AddGroceryListDialog.js';
 import ShowGroceryListId from './ShowGroceryListId.js';
+import DeleteGroceryListDialog from './DeleteGroceryListDialog.js';
 
 const GroceryListsContainer = () => {
   const [appState, setAppState] = useState({
@@ -13,7 +14,7 @@ const GroceryListsContainer = () => {
     groceryLists: [],
     openAddGroceryListDialog: false,
     openShowIdDialog: false,
-    currentOpenedId: '',
+    currentOpenedGroceryList: {},
     textField: {name: '', description: '', subscribeId: ''}
   });
 
@@ -70,22 +71,31 @@ const GroceryListsContainer = () => {
     setAppState({...appState, openAddGroceryListDialog: false });
   };
 
-  const handleOnClickDelete = (groceryListId) => {
-    deleteGroceryList(groceryListId)
-      .then(response => {
-        const newGroceryLists = appState.groceryLists.filter((groceryList) => groceryList.id !== groceryListId);
-        setAppState({...appState, groceryLists: newGroceryLists});
-      })
-    .catch(error => {
-      console.log(error.message);
-    });
-  };
 
-  const handleOnShowId = (id) => {
-    setAppState({...appState, openShowIdDialog: true, currentOpenedId: id});
+  const handleOnShowId = (groceryList) => {
+    setAppState({...appState, openShowIdDialog: true, currentOpenedGroceryList: groceryList});
   };
   const handleCloseShowId = () => {
-    setAppState({...appState, openShowIdDialog: false, currentOpenedId: ''});
+    setAppState({...appState, openShowIdDialog: false, currentOpenedGroceryList: {}});
+  };
+
+  const handleOnClickDelete = (groceryList) => {
+    setAppState({...appState, openDeleteGroceryListDialog: true, currentOpenedGroceryList: groceryList});
+  };
+
+  const handleCloseDeleteGroceryList = (action) => {
+    if (action === 'delete') {
+      deleteGroceryList(appState.currentOpenedGroceryList.id)
+        .then(response => {
+          const newGroceryLists = appState.groceryLists.filter((groceryList) => groceryList.id !== appState.currentOpenedGroceryList.id);
+          setAppState({...appState, groceryLists: newGroceryLists, openDeleteGroceryListDialog: false, currentOpenedGroceryList: {}});
+        })
+      .catch(error => {
+        console.log(error.message);
+      });
+    } else {
+      setAppState({...appState, openDeleteGroceryListDialog: false, currentOpenedGroceryList: {}});
+    }
   };
 
   return (
@@ -105,10 +115,10 @@ const GroceryListsContainer = () => {
                 </CardContent>
                 <CardActions>
                   <Button component={Link} to={'/grocerylists/'+groceryList.id} size="small">View</Button>
-                  <Button onClick={() => handleOnClickDelete(groceryList.id)} color="error" size="small">
+                  <Button onClick={() => handleOnClickDelete(groceryList)} color="error" size="small">
                     {groceryList.isOwner ? 'Delete' : 'Unsubscribe'}
                   </Button>
-                  <Button onClick={() => handleOnShowId(groceryList.id)} size="small">
+                  <Button onClick={() => handleOnShowId(groceryList)} size="small">
                     Link
                   </Button>
                 </CardActions>
@@ -127,9 +137,13 @@ const GroceryListsContainer = () => {
       <ShowGroceryListId
         open={appState.openShowIdDialog}
         handleClose={handleCloseShowId}
-        id={appState.currentOpenedId}
+        id={appState.currentOpenedGroceryList.id}
       />
-
+      <DeleteGroceryListDialog
+        open={appState.openDeleteGroceryListDialog}
+        handleClose={handleCloseDeleteGroceryList}
+        name={appState.currentOpenedGroceryList.name}
+      />
     </>
   );
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import { AmplifyAuthenticator, AmplifySignUp, AmplifySignOut } from '@aws-amplify/ui-react';
 import { Auth, Hub } from 'aws-amplify';
 import { CssBaseline, Container } from '@mui/material';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 
 import Header from './components/Header.js';
 import GroceryListsContainer from './components/GroceryListsContainer.js';
@@ -24,21 +24,28 @@ function App() {
     });
   }, [])
   if (user) {
+    const lastVisited = localStorage.getItem("dftl.lastVisited");
+
     return (
-      <Router>
-        <CssBaseline />
-        <Header />
-          <Container maxWidth="md">
-            <Switch>
-              <Route exact path="/">
+       <Router>
+         <CssBaseline />
+         <Header />
+           <Container maxWidth="md">
+             <Switch>
+               <Route exact path="/">
+                 {lastVisited 
+                   ? <Redirect to={"/grocerylists/" + lastVisited} />
+                   : <Redirect to={"/grocerylists"} />}
+               </Route>
+               <Route exact path="/grocerylists">
                 <GroceryListsContainer />
-              </Route>
-              <Route path="/grocerylists/:groceryListId">
-                <GroceryList />
-              </Route>
-            </Switch>
-          </Container>
-      </Router>
+               </Route>
+               <Route path="/grocerylists/:groceryListId">
+                 <GroceryList />
+               </Route>
+             </Switch>
+           </Container>
+       </Router>
     )
   }
   return (
@@ -50,9 +57,7 @@ function App() {
           formFields={[
             { type: "email" },
             {
-              type: "password",
-              label: "Custom Password Label",
-              placeholder: "custom password placeholder"
+              type: "password"
             },
           ]} 
         />

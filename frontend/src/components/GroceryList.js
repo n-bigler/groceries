@@ -17,6 +17,7 @@ const GroceryList = () => {
   });
 
   useEffect(() => {
+    localStorage.setItem("dftl.lastVisited", groceryListId);
     setAppState({ ...appState, loading: true });
     getGroceryListWithItems(groceryListId)
       .then(response => {
@@ -85,15 +86,16 @@ const GroceryList = () => {
                 '& > :not(style)': {
                   p: 2,
                   cursor: 'pointer',
-                  minWidth: 128,
-                  height: 128
+                  width: 100,
+                  height: 100
+
                 },
               }}>
                 <Paper elevation={3} sx={{p: 2, cursor: 'pointer'}} onClick={() => handleClickDeleteItem(item.name)}>
-                  <Typography variant="h5" component="div">
-                    {item.name}
+                  <Typography variant="body1" component="div" style={{ wordWrap: 'break-word' }}>
+                    <strong>{item.name}</strong>
                   </Typography>
-                  <Typography sx={{ mb: 1.5}} color="text.secondary">
+                  <Typography sx={{mb: 1, mt: 1}} color="text.secondary">
                     {item.quantity}
                   </Typography>
                </Paper>
