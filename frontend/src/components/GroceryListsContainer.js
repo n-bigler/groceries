@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import withGroceriesListLoading from './withGroceriesListLoading.js';
-import { Auth } from 'aws-amplify';
-import { getGroceryLists, createGroceryList, deleteGroceryList, subscribeToGroceryList } from '../services/groceriesService.js';
-import { Button, Card, CardContent, CardActions, CircularProgress, Grid, Typography } from '@mui/material';
+import React, {useEffect, useState} from 'react';
+import {
+  createGroceryList,
+  deleteGroceryList,
+  getGroceryLists,
+  subscribeToGroceryList
+} from '../services/groceriesService.js';
+import {Button, Card, CardActions, CardContent, CircularProgress, Grid, Typography} from '@mui/material';
 import {Link} from 'react-router-dom';
 import AddGroceryListDialog from './AddGroceryListDialog.js';
 import ShowGroceryListId from './ShowGroceryListId.js';
@@ -22,6 +25,7 @@ const GroceryListsContainer = () => {
     setAppState({ ...appState, loading: true });
     getGroceryLists()
       .then(response => {
+        console.log("response");
         setAppState({ ...appState, loading: false, groceryLists: response });
       })
       .catch(error => {

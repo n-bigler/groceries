@@ -1,17 +1,11 @@
 import React from 'react';
-import { Auth } from 'aws-amplify';
 import { Typography, AppBar, Box, Toolbar, Button, Icon } from '@mui/material';
 import LocalBarIcon from '@mui/icons-material/LocalBar';
 import { Link } from 'react-router-dom';
+import {handleSignOut} from "../services/authService";
+import '@aws-amplify/ui-react/styles.css';
 
 const Header = () => {
-  const handleSignOut = () => {
-    try {
-      Auth.signOut();
-    } catch (error) {
-      console.log('error signing out: ', error);
-    }
-  }
 
   const removeLastVisited = () => {
     localStorage.removeItem("dftl.lastVisited");

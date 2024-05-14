@@ -4,6 +4,16 @@ import Add from '@mui/icons-material/Add';
 import { useParams } from 'react-router-dom';
 import { getGroceryListWithItems, addItem, deleteItem } from '../services/groceriesService.js';
 import AddGroceryItemDialog from './AddGroceryItemDialog.js';
+import GroceryListModel from "../services/GroceryListModel";
+import {
+  addToActionsToSync,
+  getActionsToSync, removeFromActionsToSync,
+} from "../services/actionsToSyncService";
+
+const ActionType = {
+  DELETE: "delete",
+  ADD: "add"
+};
 
 const GroceryList = () => {
 
@@ -13,16 +23,51 @@ const GroceryList = () => {
     loading: true,
     groceryList: null,
     openDialog: false,
-    textField: {name: '', quantity: ''}
+    textField: {name: '', quantity: ''},
   });
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const actionsToSync = getActionsToSync();
+      if (actionsToSync.length !== 0) {
+        for (const action of actionsToSync) {
+          const currentItem = action.item;
+          if (action.actionType === ActionType.DELETE) {
+            deleteItem({id: action.groceryListId}, currentItem)
+              .then(response => {
+                console.log(`delete action successfully synced: ${currentItem}`);
+                removeFromActionsToSync(action);
+              })
+              .catch(error => {
+              });
+          }
+          if (action.actionType === ActionType.ADD) {
+            addItem({id: groceryListId}, currentItem)
+              .then(response => {
+                console.log(`add action successfully synced: ${currentItem}`);
+                removeFromActionsToSync(action);
+              })
+              .catch(error => {
+              });
+          }
+        }
+      }
+    }, 5000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [])
+
+  //const [itemsToAdd, setItemsToAdd] = useState(JSON.parse(localStorage.getItem("itemsToAdd")))
+  //const [itemsToDelete, setItemsToDelete] = useState(JSON.parse(localStorage.getItem("itemsToDelete")))
 
   useEffect(() => {
     localStorage.setItem("dftl.lastVisited", groceryListId);
     setAppState({ ...appState, loading: true });
     getGroceryListWithItems(groceryListId)
       .then(response => {
-        console.log(response);
-        setAppState({ ...appState, loading: false, groceryList: response });
+        let groceryList = new GroceryListModel(response.name, groceryListId, response.description, response.items);
+        setAppState({ ...appState, loading: false, groceryList: groceryList });
       })
       .catch(error => {
         console.log(error.message);
@@ -34,14 +79,16 @@ const GroceryList = () => {
   }
   
   const handleClickDeleteItem = (itemName) => {
-   deleteItem(groceryListId, itemName)
+   const newItems = appState.groceryList.items.filter(item => item.name !== itemName);
+   const newGroceryList = { ...appState.groceryList, items: newItems};
+   deleteItem(appState.groceryList, itemName)
     .then(response => {
-      const newItems = appState.groceryList.items.filter(item => item.name !== itemName);
-      const newGroceryList = { ...appState.groceryList, items: newItems};
       setAppState({ ...appState, groceryList: newGroceryList});
     })
     .catch(error => {
-      console.log(error.message)
+      console.log(error);
+      addToActionsToSync(groceryListId, ActionType.DELETE, itemName);
+      setAppState({ ...appState, groceryList: newGroceryList});
     });
   };
 
@@ -51,15 +98,18 @@ const GroceryList = () => {
   const handleClose = (action) => {
     if (action === 'add') {
      const newItem = appState.textField;
-     addItem(groceryListId, newItem)
+     const newItems = [...appState.groceryList.items];
+     newItems.push(newItem);
+     const newGroceryList = { ...appState.groceryList, items: newItems};
+     addItem(appState.groceryList, newItem)
       .then(response => {
-        const newItems = [...appState.groceryList.items];
-        newItems.push(newItem);
-        const newGroceryList = { ...appState.groceryList, items: newItems};
-        setAppState({ ...appState, openDialog: false, groceryList: newGroceryList, textField: {name: '', quantity: ''}});       
+        console.log("item added");
+        setAppState({ ...appState, openDialog: false, groceryList: newGroceryList, textField: {name: '', quantity: ''}});
       })
       .catch(error => {
-        console.log(error.message)
+        console.log(error);
+        addToActionsToSync(groceryListId, ActionType.ADD, newItem);
+        setAppState({ ...appState, openDialog: false, groceryList: newGroceryList, textField: {name: '', quantity: ''}});
       });
     }
     setAppState({...appState, openDialog: false });

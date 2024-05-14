@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, TextField, DialogTitle, Stack, Tab, Box } from '@mui/material';
-import { TabContext, TabList, TabPanel } from '@mui/lab';
+import React, {useState} from 'react';
+import {Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Tab, TextField} from '@mui/material';
+import {TabContext, TabList, TabPanel} from '@mui/lab';
 
 const AddGroceryItemDialog = (props) => {
   const [value, setValue] = useState('1');

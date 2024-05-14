@@ -1,7 +1,7 @@
 org: nbigler
-app: groceries
-service: groceries
-frameworkVersion: '2'
+app: dftl
+service: dftl
+frameworkVersion: '3'
 
 plugins:
   - serverless-dynamodb-local
@@ -12,8 +12,8 @@ custom:
       - dev
 provider:
   name: aws
-  runtime: nodejs14.x
-  region: eu-west-3
+  runtime: nodejs20.x
+  region: eu-central-1
   lambdaHashingVersion: '20201221'
   stage: dev
   environment:
