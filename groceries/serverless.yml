@@ -1,7 +1,7 @@
 org: nbigler
 app: dftl
 service: dftl
-frameworkVersion: '3'
+#frameworkVersion: '3'
 
 plugins:
   - serverless-dynamodb-local
@@ -65,11 +65,9 @@ functions:
           method: GET
           authorizer: serviceAuthorizer
       - httpApi:
-          path: /grocerylist/{groceryListId}/{itemName}
+          path: /grocerylist/{groceryListId}/item
           method: DELETE
           authorizer: serviceAuthorizer
-
-
   groceryList:
     handler: groceries/groceryList.handler
     events:
@@ -90,6 +88,17 @@ functions:
           method: PATCH
           authorizer: serviceAuthorizer
 
+  groceryListv2:
+    handler: groceries/groceryListv2.handler
+    events:
+      - httpApi:
+          path: /v2/grocerylist
+          method: POST
+          authorizer: serviceAuthorizer
+      - httpApi:
+          path: /v2/grocerylist/{groceryListId}
+          method: DELETE
+          authorizer: serviceAuthorizer
 resources:
   Resources:
     GroceriesDynamoDbTable:
@@ -143,13 +152,15 @@ resources:
         UserPoolId:
           Ref: ServiceUserPool
         CallbackURLs: 
-          - https://localhost:3000
+          - http://localhost:3000/
+          - https://dftl.nicolasbigler.com/
         ExplicitAuthFlows:
           - ALLOW_USER_SRP_AUTH
           - ALLOW_REFRESH_TOKEN_AUTH
         GenerateSecret: false
         SupportedIdentityProviders: 
           - COGNITO
+          - Google
     ServiceUserPoolDomain:
       Type: 'AWS::Cognito::UserPoolDomain'
       Properties:

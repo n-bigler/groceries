@@ -7,11 +7,9 @@ const uuid = require('uuid');
 
 exports.handler =  (event, context, lambdaCallback) => {
 
-  console.log('Received event:', JSON.stringify(event, null, 2));
+  const groceryListId = decodeURIComponent(event.pathParameters.groceryListId);
 
-  const groceryListId = event.pathParameters.groceryListId;
-
-  const username = event.requestContext.authorizer.jwt.claims['cognito:username'];
+  const username = event.requestContext.authorizer.jwt.claims['username'];
 
   switch (event.requestContext.http.method) {
     case 'POST':
@@ -25,7 +23,7 @@ exports.handler =  (event, context, lambdaCallback) => {
     case 'GET':
       return getItemsForGroceryList(groceryListId, username, lambdaCallback);
     case 'DELETE':
-      const itemName = event.pathParameters.itemName;
+      const itemName = JSON.parse(event.body);
       return deleteItem(groceryListId, itemName, lambdaCallback);
     default:
       throw new Error(`Unrecognized operation "${operation}"`);

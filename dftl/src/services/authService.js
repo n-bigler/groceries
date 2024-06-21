@@ -1,11 +1,8 @@
-import {fetchAuthSession, getCurrentUser, signOut} from "aws-amplify/auth";
+import {fetchAuthSession, signOut} from "aws-amplify/auth";
 
 export async function currentSession() {
     try {
-        console.log("fetching access token")
         const { accessToken } = (await fetchAuthSession()).tokens ?? {};
-        console.log("accessToken");
-        console.log(accessToken.toString());
         return accessToken;
     } catch (err) {
         console.log(err);

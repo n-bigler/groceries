@@ -10,6 +10,7 @@ import {Link} from 'react-router-dom';
 import AddGroceryListDialog from './AddGroceryListDialog.js';
 import ShowGroceryListId from './ShowGroceryListId.js';
 import DeleteGroceryListDialog from './DeleteGroceryListDialog.js';
+import {putGroceryList} from "../services/db";
 
 const GroceryListsContainer = () => {
   const [appState, setAppState] = useState({
@@ -20,6 +21,12 @@ const GroceryListsContainer = () => {
     currentOpenedGroceryList: {},
     textField: {name: '', description: '', subscribeId: ''}
   });
+
+  useEffect(() => {
+    appState.groceryLists.forEach((groceryList) => {
+      putGroceryList(groceryList);
+    })
+  }, [appState])
 
   useEffect(() => {
     setAppState({ ...appState, loading: true });

@@ -1,8 +1,7 @@
 import {currentSession} from "./authService";
-import GroceryListModel from "./GroceryListModel";
 
 export async function getGroceryListWithItems(groceryListId) {
-  const rawResponse = await fetch(process.env.REACT_APP_API_URL + '/grocerylist/'+groceryListId, {
+  const rawResponse = await fetch(process.env.REACT_APP_API_URL + '/grocerylist/'+encodeURIComponent(groceryListId), {
     method: 'GET',
     headers: { 
       'Accept': 'application/json',
@@ -20,7 +19,7 @@ export async function getGroceryListWithItems(groceryListId) {
 
 export async function addItem(groceryList, item) {
   item.name = item.name.trim();
-  const rawResponse = await fetch(process.env.REACT_APP_API_URL + '/grocerylist/'+groceryList.id, {
+  const rawResponse = await fetch(process.env.REACT_APP_API_URL + '/grocerylist/'+encodeURIComponent(groceryList.id), {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -38,13 +37,14 @@ export async function addItem(groceryList, item) {
 }
 
 export async function deleteItem(groceryList, name) {
-  const rawResponse = await fetch(process.env.REACT_APP_API_URL + '/grocerylist/'+groceryList.id+'/'+name.trim(), {
+  const rawResponse = await fetch(process.env.REACT_APP_API_URL + '/grocerylist/'+encodeURIComponent(groceryList.id)+'/item', {
     method: 'DELETE',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${(await currentSession())}`
-    }
+    },
+    body: JSON.stringify(name.trim())
   });
   if(!rawResponse.ok) {
     const message = `Could not delete item: ${response.status}`;
@@ -73,7 +73,7 @@ export async function createGroceryList(groceryList) {
 }
 
 export async function subscribeToGroceryList(groceryListId) {
-  const rawResponse = await fetch(process.env.REACT_APP_API_URL + '/grocerylist/' + groceryListId, {
+  const rawResponse = await fetch(process.env.REACT_APP_API_URL + '/grocerylist/' + encodeURIComponent(groceryListId), {
     method: 'PATCH',
     headers: {
       'Accept': 'application/json',
@@ -107,7 +107,7 @@ export async function getGroceryLists() {
 }
 
 export async function deleteGroceryList(groceryListId) {
-  const rawResponse = await fetch(process.env.REACT_APP_API_URL + '/grocerylist/'+groceryListId, {
+  const rawResponse = await fetch(process.env.REACT_APP_API_URL + '/grocerylist/'+encodeURIComponent(groceryListId), {
     method: 'DELETE',
     headers: {
       'Accept': 'application/json',

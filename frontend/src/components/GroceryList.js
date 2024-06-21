@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { CircularProgress, Typography, Grid, Button, Paper, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, TextField, DialogTitle, Stack, Box } from '@mui/material';
+import React, {useEffect, useState} from 'react';
+import {Box, CircularProgress, Grid, IconButton, Paper, Typography} from '@mui/material';
 import Add from '@mui/icons-material/Add';
-import { useParams } from 'react-router-dom';
-import { getGroceryListWithItems, addItem, deleteItem } from '../services/groceriesService.js';
+import {useParams} from 'react-router-dom';
+import {addItem, deleteItem, getGroceryListWithItems} from '../services/groceriesService.js';
 import AddGroceryItemDialog from './AddGroceryItemDialog.js';
 import GroceryListModel from "../services/GroceryListModel";
-import {
-  addToActionsToSync,
-  getActionsToSync, removeFromActionsToSync,
-} from "../services/actionsToSyncService";
+import {addToActionsToSync, getActionsToSync, removeFromActionsToSync} from "../services/actionsToSyncService";
 
 const ActionType = {
   DELETE: "delete",
@@ -57,9 +54,6 @@ const GroceryList = () => {
       clearInterval(interval);
     };
   }, [])
-
-  //const [itemsToAdd, setItemsToAdd] = useState(JSON.parse(localStorage.getItem("itemsToAdd")))
-  //const [itemsToDelete, setItemsToDelete] = useState(JSON.parse(localStorage.getItem("itemsToDelete")))
 
   useEffect(() => {
     localStorage.setItem("dftl.lastVisited", groceryListId);
