@@ -62,7 +62,6 @@ export default class GroceryListLocalService {
   }
 
   static async fetchItems(groceryListId: string) {
-    console.log("fetching items");
     const items: Item[] = await GroceryListRemoteService.fetchItems(groceryListId);
     try {
       items.forEach((item: Item) => db.items.put(item, item.name));

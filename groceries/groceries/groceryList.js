@@ -156,7 +156,7 @@ function getGroceryListAndItems(groceryListId, callback) {
 
 function subscribeGroceryList(groceryListId, username, lambdaCallback) {
   getGroceryListAndItems(groceryListId, (groceryListItems) => {
-    const groceryList = groceryListItems[0]
+    const groceryList = groceryListItems.find(element => element.name !== undefined);
     const params = {
       TableName: process.env.DYNAMODB_TABLE,
       Item: {

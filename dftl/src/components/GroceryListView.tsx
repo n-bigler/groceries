@@ -10,26 +10,26 @@ import React, {useEffect, useState} from "react";
 import AddGroceryItemDialog from "@/components/AddGroceryItemDialog";
 import GroceryListLocalService from "@/services/GroceryListLocalService";
 
-export default function GroceryList({ params }: { params: { groceryListId: string }}) {
+export default function GroceryListView({ groceryListId }: { groceryListId: string}) {
 
   const [openDialog, setOpenDialog] = useState(false);
   const [textField, setTextField] = useState({name: '', quantity: ''});
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      localStorage.setItem("dftl.lastVisited", params.groceryListId);
+      localStorage.setItem("dftl.lastVisited", groceryListId);
     }
-    GroceryListLocalService.fetchItems(params.groceryListId);
-  }, []);
+    GroceryListLocalService.fetchItems(groceryListId);
+  }, [groceryListId]);
 
   const groceryList = useLiveQuery(() => db.groceryLists
     .where("id")
-    .equals(params.groceryListId)
+    .equals(groceryListId)
     .first());
 
   let items = useLiveQuery(() => db.items
     .where("groceryListId")
-    .equals(params.groceryListId)
+    .equals(groceryListId)
     .toArray());
 
   function handleTextFieldChange(field: any, newValue: any) {
@@ -38,7 +38,7 @@ export default function GroceryList({ params }: { params: { groceryListId: strin
 
   function handleClose(action: string) {
     if (action === 'add') {
-      const item = new Item(textField.name, textField.quantity, params.groceryListId);
+      const item = new Item(textField.name, textField.quantity, groceryListId);
       GroceryListLocalService.addItem(item);
       setTextField({name: '', quantity: ''});
     }
@@ -61,7 +61,7 @@ export default function GroceryList({ params }: { params: { groceryListId: strin
       <Grid container spacing={2} sx={{mt: 2, mb: 2}}>
         {items?.map((item: Item) => {
           return (
-            <Grid item key={item.name} xs={2}>
+            <Grid item key={item.name} xs={4} sm={2}>
               <Box sx={{
                 display: 'flex',
                 '& > :not(style)': {
@@ -69,11 +69,10 @@ export default function GroceryList({ params }: { params: { groceryListId: strin
                   cursor: 'pointer',
                   width: 100,
                   height: 100
-
                 },
               }}>
                 <Paper elevation={3} sx={{p: 2, cursor: 'pointer'}} onClick={() => handleClickDeleteItem(item)}>
-                  <Typography variant="body1" component="div" style={{ wordWrap: 'break-word' }}>
+                  <Typography variant="body1" component="div" style={{ wordWrap: 'break-word' }} align={'center'}>
                     <strong>{item.name}</strong>
                   </Typography>
                   <Typography sx={{mb: 1, mt: 1}} color="text.secondary">

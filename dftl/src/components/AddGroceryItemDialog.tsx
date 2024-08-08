@@ -24,6 +24,11 @@ export default function AddGroceryItemDialog(props: any) {
             variant="standard"
             onChange={(e) => props.handleTextFieldChange('name', e.target.value)}
             value={props.textField.name}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                props.handleClose('add')
+              }
+            }}
           />
           <TextField
             margin="dense"

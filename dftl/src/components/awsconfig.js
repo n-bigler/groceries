@@ -15,8 +15,8 @@ let awsconfig = {
         oauth: {
           domain: 'service-user-pool-domain-dev-nbigler-griffon.auth.eu-central-1.amazoncognito.com',
           scopes: ['openid', 'email', 'profile'],
-          redirectSignIn: ['http://localhost:3000/', 'https://dftl.nicolasbigler.com/'],
-          redirectSignOut: ['http://localhost:3000/', 'https://dftl.nicolasbigler.com/'],
+          redirectSignIn: ['http://localhost:3000/', 'https://dftl.nicolasbigler.com/', 'https://dftl2.nicolasbigler.ch/'],
+          redirectSignOut: ['http://localhost:3000/', 'https://dftl.nicolasbigler.com/', 'https://dftl2.nicolasbigler.ch/'],
           responseType: 'token',
         },
         username: 'true'
