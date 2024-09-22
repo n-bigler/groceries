@@ -4,7 +4,7 @@ export async function currentSession() {
     try {
         // const session = await fetchAuthSession({ forceRefresh: true });
         // console.log(session);
-        const { accessToken } = (await fetchAuthSession({ forceRefresh: true })).tokens ?? {};
+        const { accessToken } = (await fetchAuthSession()).tokens ?? {};
         // console.log(refreshToken);
         return accessToken;
     } catch (err) {

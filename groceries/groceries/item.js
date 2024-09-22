@@ -23,7 +23,7 @@ exports.handler =  (event, context, lambdaCallback) => {
     case 'GET':
       return getItemsForGroceryList(groceryListId, username, lambdaCallback);
     case 'DELETE':
-      const itemName = JSON.parse(event.body);
+      const itemName = JSON.parse(event.body).trim();
       return deleteItem(groceryListId, itemName, lambdaCallback);
     default:
       throw new Error(`Unrecognized operation "${operation}"`);
@@ -31,13 +31,13 @@ exports.handler =  (event, context, lambdaCallback) => {
 };
 
 function addItemToGroceryList(item, groceryListId, lambdaCallback) {
-
+  const itemName = item.name.trim();
   const params = {
     TableName: process.env.DYNAMODB_TABLE,
     Item: {
       PK: 'GROCERY_LIST#'+groceryListId,
-      SK: 'ITEM#'+item.name,
-      itemName: item.name,
+      SK: 'ITEM#'+itemName,
+      itemName: itemName,
       quantity: item.quantity
     }
   };

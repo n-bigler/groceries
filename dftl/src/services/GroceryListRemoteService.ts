@@ -110,7 +110,7 @@ export default class GroceryListRemoteService {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${(await currentSession())}`
       },
-      body: JSON.stringify(item.name.trim())
+      body: JSON.stringify(item.name)
     });
     if(!rawResponse.ok) {
       console.log(`Could not delete item list: ${rawResponse.status}`);

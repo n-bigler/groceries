@@ -15,7 +15,6 @@ import GroceryListRemoteService from "@/services/GroceryListRemoteService";
 import DbSync from "@/components/DbSync";
 
 export default function GroceryLists() {
-  // const [loading, setLoading] = useState(false);
   const [openAddGroceryListDialog, setOpenAddGroceryListDialog] = useState(false);
   const [openShowIdDialog, setOpenShowIdDialog] = useState(false);
   const [openDeleteGroceryListDialog, setOpenDeleteGroceryListDialog] = useState(false);

@@ -14,9 +14,6 @@ const inter = Inter({ subsets: ["latin"] });
 // @ts-ignore
 Amplify.configure(awsconfig, {ssr: true});
 
-
-
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -26,7 +23,7 @@ export default function RootLayout({
   theme = responsiveFontSizes(theme);
   return (
     <>
-      <Authenticator  socialProviders={['google']}>
+      <Authenticator socialProviders={['google']}>
         <Header/>
         <CssBaseline/>
         <ThemeProvider theme={theme}>
